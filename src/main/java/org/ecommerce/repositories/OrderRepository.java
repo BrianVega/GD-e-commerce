@@ -2,10 +2,9 @@ package org.ecommerce.repositories;
 
 import org.ecommerce.enums.OrderStatus;
 import org.ecommerce.models.Order;
-import org.ecommerce.repositories.impl.CrudOperationsImpl;
+import org.ecommerce.models.Product;
 
-public class OrderRepository extends CrudOperationsImpl<Order> {
-    public void updateStatus(Order order, OrderStatus status) {
-        order.setStatus(status);
-    }
+public interface OrderRepository {
+    void updateStatus(Order order, OrderStatus status);
+    void saveProductOrderRelation(Product product, Order order); // Should this be performed in here? or in the db?
 }

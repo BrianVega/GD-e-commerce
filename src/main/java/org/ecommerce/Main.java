@@ -2,14 +2,15 @@ package org.ecommerce;
 
 import org.ecommerce.controllers.OrderController;
 import org.ecommerce.message.broker.MessageQueue;
-import org.ecommerce.repositories.OrderRepository;
+import org.ecommerce.repositories.impl.OrderRepositoryImpl;
 import org.ecommerce.services.impl.OrderServiceImpl;
+import org.ecommerce.util.database.Operations;
 
 public class Main {
     public static void main (String[] args) {
             // TODO: Create a parser (Strings -> Objects/Maps) class for test Controllers
         OrderController orderController = new OrderController(
-                new OrderServiceImpl(new OrderRepository()
+                new OrderServiceImpl(new OrderRepositoryImpl(new Operations<>())
                         , new MessageQueue<>()));
 
         String request = "{\n" +

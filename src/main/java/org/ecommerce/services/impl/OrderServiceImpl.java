@@ -7,8 +7,9 @@ import org.ecommerce.message.broker.MessageQueue;
 import org.ecommerce.message.broker.consumers.OrderConsumer;
 import org.ecommerce.message.broker.producers.Producer;
 import org.ecommerce.models.Order;
-import org.ecommerce.repositories.OrderRepository;
+import org.ecommerce.repositories.impl.OrderRepositoryImpl;
 import org.ecommerce.services.OrderService;
+import org.ecommerce.util.database.Operations;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -16,23 +17,29 @@ import java.util.concurrent.Executors;
 
 public class OrderServiceImpl implements OrderService {
 
-    private final OrderRepository orderRepository;
+    private final OrderRepositoryImpl orderRepositoryImpl;
     private final MessageQueue<Order> messageQueue;
     private final ExecutorService executorService;
 
-    public OrderServiceImpl(OrderRepository orderRepository, MessageQueue<Order> messageQueue) {
-        this.orderRepository = orderRepository;
+    public OrderServiceImpl(OrderRepositoryImpl orderRepositoryImpl, MessageQueue<Order> messageQueue) {
+        this.orderRepositoryImpl = orderRepositoryImpl;
         this.messageQueue = messageQueue;
         this.executorService = Executors.newSingleThreadExecutor();
     }
 
     @Override
     public Order create(Order order) {
-        orderRepository.save(order);
+        orderRepositoryImpl.save(order);
         produceOrder(order);
-        //orderRepository.updateStatus(order, OrderStatus.REQUESTED);
+        //orderRepositoryImpl.updateStatus(order, OrderStatus.REQUESTED);
         updateOrderStatus(order.getId(), OrderStatus.REQUESTED);
         return order;
+    }
+
+    @Override
+    public void createOrderTransaction(Order order) {
+        orderRepositoryImpl.save(order);
+
     }
 
     @Override
@@ -42,17 +49,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void delete(Long id) {
-        orderRepository.deleteById(id);
+        orderRepositoryImpl.deleteById(id);
     }
 
     @Override
     public List<Order> findAll() {
-        return orderRepository.findAll();
+        return orderRepositoryImpl.findAll();
     }
 
     @Override
     public Order findById(Long id) {
-        return orderRepository.findById(id)
+        return orderRepositoryImpl.findById(id)
                 .orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()));
     }
 
@@ -80,9 +87,9 @@ public class OrderServiceImpl implements OrderService {
 
     // Shipping Management connects to this service to update the status
     public void updateOrderStatus(Long id, OrderStatus status) {
-        orderRepository.findById(id)
+        orderRepositoryImpl.findById(id)
                 .map(result -> {
-                    orderRepository.updateStatus(result, status);
+                    orderRepositoryImpl.updateStatus(result, status);
                     return result;
                 }).orElseThrow(() -> new EntityNotFound("Order not found"));
     }
