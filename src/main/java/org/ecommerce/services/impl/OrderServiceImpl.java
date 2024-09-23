@@ -9,7 +9,6 @@ import org.ecommerce.message.broker.producers.Producer;
 import org.ecommerce.models.Order;
 import org.ecommerce.repositories.impl.OrderRepositoryImpl;
 import org.ecommerce.services.OrderService;
-import org.ecommerce.util.database.Operations;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -29,10 +28,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order create(Order order) {
-        orderRepositoryImpl.save(order);
+//        orderRepositoryImpl.save(order);
+        orderRepositoryImpl.saveProductOrderRelation(order);
         produceOrder(order);
         //orderRepositoryImpl.updateStatus(order, OrderStatus.REQUESTED);
-        updateOrderStatus(order.getId(), OrderStatus.REQUESTED);
+        //updateOrderStatus(order.getId(), OrderStatus.REQUESTED);
         return order;
     }
 

@@ -14,8 +14,7 @@ public class Main {
                         , new MessageQueue<>()));
 
         String request = "{\n" +
-                "  \"id\": 1,\n" +
-                "  \"customerId\": 12345,\n" +
+                "  \"customerId\": 1,\n" +
                 "  \"orderDate\": \"2024-09-01\",\n" +
                 "  \"products\": [\n" +
                 "    {\n" +
@@ -99,8 +98,6 @@ public class Main {
                 "}\n";
         orderController.consumeOrders();
 
-        System.out.println(orderController.create(request));
-        System.out.println(orderController.create(request));
         System.out.println(orderController.create(request));
 
 

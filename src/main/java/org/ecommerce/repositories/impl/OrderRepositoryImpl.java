@@ -6,6 +6,9 @@ import org.ecommerce.models.Product;
 import org.ecommerce.repositories.OrderRepository;
 import org.ecommerce.util.database.Operations;
 
+import java.sql.SQLException;
+import java.util.List;
+
 public class OrderRepositoryImpl extends CrudOperationsImpl<Order> implements OrderRepository {
 
     public final Operations<Order> operationsDB;
@@ -39,5 +42,33 @@ public class OrderRepositoryImpl extends CrudOperationsImpl<Order> implements Or
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        save_products_orders(order.getProducts());
+    }
+
+    private void save_products_orders(List<Product> products) {
+        try {
+            Long lastValueId = getLastRowInsertedID();
+            String query = "INSERT INTO products_orders (fk_product_id, fk_order_id) VALUES (?, ?);";
+            for (Product product : products) {
+                operationsDB.execute(query, product.getId(), lastValueId);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    private Long getLastRowInsertedID() throws SQLException {
+        return operationsDB.findOne("SELECT LASTVAL();", // FIXME: Probably this is not safe when working with concurrent orders placement
+                resultSet -> {
+                    try {
+                        resultSet.next();
+                        return Order.builder()
+                                .id(resultSet.getLong(1))
+                                .build();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).getId();
     }
 }
