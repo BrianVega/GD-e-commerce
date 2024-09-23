@@ -62,7 +62,7 @@ class OrderRepositoryImplTest {
 
         @Test
         void saveProductOrderRelation_doesNotThrow() {
-            assertDoesNotThrow(() -> repository.saveProductOrderRelation(product, order));
+            assertDoesNotThrow(() -> repository.saveProductOrderRelation(order));
 
             try {
                 verify(operationsDB).execute(
