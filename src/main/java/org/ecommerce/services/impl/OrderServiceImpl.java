@@ -37,12 +37,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void createOrderTransaction(Order order) {
-        orderRepositoryImpl.save(order);
-
-    }
-
-    @Override
     public Order update(Long id, Order entity) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
