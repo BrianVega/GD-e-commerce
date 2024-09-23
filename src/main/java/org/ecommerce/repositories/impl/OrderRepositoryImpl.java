@@ -8,7 +8,7 @@ import org.ecommerce.util.database.Operations;
 
 public class OrderRepositoryImpl extends CrudOperationsImpl<Order> implements OrderRepository {
 
-    private final Operations<Order> operationsDB;
+    public final Operations<Order> operationsDB;
 
     public OrderRepositoryImpl(Operations<Order> operationsDB) {
         this.operationsDB = operationsDB;
@@ -32,7 +32,7 @@ public class OrderRepositoryImpl extends CrudOperationsImpl<Order> implements Or
                     order.getPaymentDetails().getId(),
                     order.getCustomerId(),
                     order.getOrderDate(),
-                    order.getStatus(),
+                    order.getStatus().name(),
                     order.getShippingInformation().getShippingCost().getAmount()
                             .add(order.getBillingInformation().getAmount().getAmount())
             );
