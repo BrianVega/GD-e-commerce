@@ -6,5 +6,5 @@ import org.ecommerce.models.Product;
 
 public interface OrderRepository {
     void updateStatus(Order order, OrderStatus status);
-    void saveProductOrderRelation(Product product, Order order); // Should this be performed in here? or in the db?
+    void saveProductOrderRelation(Order order); // Should this be performed in here? or in the db?
 }

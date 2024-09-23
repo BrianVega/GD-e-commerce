@@ -20,7 +20,7 @@ public class OrderRepositoryImpl extends CrudOperationsImpl<Order> implements Or
     }
 
     @Override
-    public void saveProductOrderRelation(Product product, Order order) {
+    public void saveProductOrderRelation(Order order) {
         String query = "INSERT INTO orders " +
                 "(fk_shipping_information_id, fk_billing_information_id, fk_payment_details_id, fk_customer_id, date, status, total_usd) VALUES " +
                 "(?, ?, ?, ?, ?, ?, ?);";
