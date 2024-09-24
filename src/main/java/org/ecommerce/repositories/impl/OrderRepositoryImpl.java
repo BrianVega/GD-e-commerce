@@ -43,7 +43,6 @@ public class OrderRepositoryImpl extends CrudOperationsImpl<Order> implements Or
             e.printStackTrace();
         }
 
-        System.exit(1); // Simulating that the system fails, so the other part of the transaction won't execute
         save_products_orders(order.getProducts());
     }
 
