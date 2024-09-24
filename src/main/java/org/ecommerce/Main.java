@@ -2,13 +2,29 @@ package org.ecommerce;
 
 import org.ecommerce.controllers.OrderController;
 import org.ecommerce.message.broker.MessageQueue;
+import org.ecommerce.models.StockEntry;
+import org.ecommerce.repositories.StockRepository;
 import org.ecommerce.repositories.impl.OrderRepositoryImpl;
 import org.ecommerce.services.impl.OrderServiceImpl;
+import org.ecommerce.services.impl.StockServiceImpl;
 import org.ecommerce.util.database.Operations;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
     public static void main (String[] args) {
-            // TODO: Create a parser (Strings -> Objects/Maps) class for test Controllers
+//        stockAddStockOperations();
+//        stockTakeStockOperations();
+        try (ExecutorService executorService = Executors.newFixedThreadPool(2)) {
+            for (int i = 0; i < 4; i++) {
+                executorService.submit(Main::stockTakeStockOperations);
+            }
+        }
+
+    }
+
+    private static void placeOrdersOperations() {
         OrderController orderController = new OrderController(
                 new OrderServiceImpl(new OrderRepositoryImpl(new Operations<>())
                         , new MessageQueue<>()));
@@ -99,7 +115,23 @@ public class Main {
         orderController.consumeOrders();
 
         System.out.println(orderController.create(request));
+    }
 
+    private static void stockAddStockOperations() {
+        StockServiceImpl stockService = new StockServiceImpl(new StockRepository(new Operations<>()));
+        StockEntry<Long, Long> stockEntry = StockEntry.<Long, Long>builder()
+                .locationId(1L)
+                .productId(10L)
+                .build();
+        stockService.addStock(stockEntry, 1);
+    }
 
+    private static void stockTakeStockOperations() {
+        StockServiceImpl stockService = new StockServiceImpl(new StockRepository(new Operations<>()));
+        StockEntry<Long, Long> stockEntry = StockEntry.<Long, Long>builder()
+                .locationId(1L)
+                .productId(10L)
+                .build();
+        stockService.takeStock(stockEntry, 1);
     }
 }
