@@ -89,19 +89,6 @@ INSERT INTO products_categories (fk_product_id, fk_category_id) VALUES
                                                                     (9, 3),
                                                                     (10, 3);
 
--- Insert data into `storage_centers`
-INSERT INTO storage_centers (fk_inventory_id, measurement_unit, quantity) VALUES
-                                                                              (1, 'pieces', 100),
-                                                                              (2, 'pieces', 150),
-                                                                              (3, 'pieces', 200),
-                                                                              (4, 'pieces', 250),
-                                                                              (5, 'pieces', 300),
-                                                                              (6, 'pieces', 350),
-                                                                              (7, 'pieces', 400),
-                                                                              (8, 'pieces', 450),
-                                                                              (9, 'pieces', 500),
-                                                                              (10, 'pieces', 550);
-
 -- Insert data into `address_information`
 INSERT INTO address_information (street, city, state, zip_code, country) VALUES
                                                                              ('123 Elm St', 'Springfield', 'IL', '62701', 'USA'),
@@ -114,6 +101,25 @@ INSERT INTO address_information (street, city, state, zip_code, country) VALUES
                                                                              ('505 Ash St', 'Springfield', 'IL', '62708', 'USA'),
                                                                              ('606 Elm St', 'Springfield', 'IL', '62709', 'USA'),
                                                                              ('707 Oak St', 'Springfield', 'IL', '62710', 'USA');
+
+-- Insert data into `storage_centers`
+INSERT INTO storage_centers (fk_address_information_id) VALUES (7),(8),(9);
+
+
+
+INSERT INTO stock (fk_storage_center_id, fk_inventory_id, measurement_unit, quantity) VALUES
+                                                                              (1, 1, 'pieces', 100),
+                                                                              (2, 2, 'pieces', 150),
+                                                                              (3, 3, 'pieces', 200),
+                                                                              (1, 4, 'pieces', 250),
+                                                                              (2, 5, 'pieces', 300),
+                                                                              (3, 6, 'pieces', 350),
+                                                                              (1, 7, 'pieces', 400),
+                                                                              (2, 8, 'pieces', 450),
+                                                                              (3, 9, 'pieces', 500),
+                                                                              (1, 10,'pieces', 550);
+
+
 
 -- Insert data into `shipping_information`
 INSERT INTO shipping_information (fk_address_information_id, fk_shipping_fee_id, tracking_number, date, status) VALUES

@@ -53,14 +53,6 @@ CREATE TABLE IF NOT EXISTS products_categories (
     FOREIGN KEY (fk_category_id) REFERENCES categories(pk_category_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS storage_centers (
-    pk_storage_center BIGSERIAL PRIMARY KEY,
-    fk_inventory_id BIGINT UNIQUE,
-    measurement_unit VARCHAR(50) NOT NULL,
-    quantity BIGINT NOT NULL,
-    FOREIGN KEY (fk_inventory_id) REFERENCES inventories(pk_inventory_id) ON DELETE SET NULL
-);
-
 CREATE TABLE IF NOT EXISTS address_information (
     pk_address_information_id BIGSERIAL PRIMARY KEY,
     street VARCHAR(50) NOT NULL,
@@ -69,6 +61,23 @@ CREATE TABLE IF NOT EXISTS address_information (
     zip_code VARCHAR(50) NOT NULL,
     country VARCHAR(50) NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS storage_centers (
+    pk_storage_center_id BIGSERIAL PRIMARY KEY,
+    fk_address_information_id BIGINT,
+    FOREIGN KEY(fk_address_information_id) REFERENCES address_information(pk_address_information_id)
+);
+
+CREATE TABLE IF NOT EXISTS stock(
+    pk_stock_id BIGSERIAL PRIMARY KEY,
+    fk_storage_center_id BIGINT,
+    fk_inventory_id BIGINT,
+    measurement_unit VARCHAR(50) NOT NULL,
+    quantity BIGINT NOT NULL,
+    FOREIGN KEY (fk_storage_center_id) REFERENCES storage_centers(pk_storage_center_id) ON DELETE CASCADE,
+    FOREIGN KEY (fk_inventory_id) REFERENCES inventories(pk_inventory_id) ON DELETE CASCADE
+);
+
 
 CREATE TABLE IF NOT EXISTS shipping_information (
     pk_shipping_information_id BIGSERIAL PRIMARY KEY,
