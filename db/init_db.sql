@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS inventories (
 
 CREATE TABLE IF NOT EXISTS products (
     pk_product_id BIGSERIAL PRIMARY KEY,
-    fk_inventory_id BIGINT UNIQUE,
+    fk_inventory_id BIGINT,
     fk_price_id BIGINT,           
     name VARCHAR(255) NOT NULL,
     description TEXT,
