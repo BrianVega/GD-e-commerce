@@ -1,16 +1,18 @@
 package org.ecommerce.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.ecommerce.enums.MeasurementUnit;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StockEntry <ProductID, LocationID> {
+@SuperBuilder
+public class StockEntry <ProductID, LocationID> extends Identity {
     private ProductID productId;
     private LocationID locationId;
+    private MeasurementUnit measurementUnit;
     private int stock;
+
 }
