@@ -9,7 +9,9 @@ import org.ecommerce.message.broker.producers.Producer;
 import org.ecommerce.models.Order;
 import org.ecommerce.repositories.OrderRepository;
 import org.ecommerce.services.OrderService;
+import org.ecommerce.util.cache.FakeSelectCache;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,11 +21,13 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final MessageQueue<Order> messageQueue;
     private final ExecutorService executorService;
+    private final FakeSelectCache<Order> fakeSelectCache;
 
-    public OrderServiceImpl(OrderRepository orderRepository, MessageQueue<Order> messageQueue) {
+    public OrderServiceImpl(OrderRepository orderRepository, MessageQueue<Order> messageQueue, FakeSelectCache<Order> fakeSelectCache) {
         this.orderRepository = orderRepository;
         this.messageQueue = messageQueue;
         this.executorService = Executors.newSingleThreadExecutor();
+        this.fakeSelectCache = fakeSelectCache;
     }
 
     @Override
@@ -52,8 +56,20 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order findById(Long id) {
-        return orderRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()));
+        if (fakeSelectCache.getDateTime() != null && LocalDateTime.now().compareTo(fakeSelectCache.getDateTime()) == 1) {
+            return fakeSelectCache.getData();
+        }
+        return orderRepository.findById(id).stream()
+                .map((order) -> {
+                    LocalDateTime currentDate = LocalDateTime.now();
+                    System.out.println(currentDate);
+                    fakeSelectCache.setDateTime(currentDate);
+                    fakeSelectCache.setData(order);
+                    return order;
+                }).findFirst().orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()));
+
+//        return orderRepository.findById(id)
+//                .orElseThrow(() -> new EntityNotFound(Error.ENTITY_NOT_FOUND.getDescription()));
     }
 
     // Consume message broker messages

@@ -8,6 +8,7 @@ import org.ecommerce.models.requests.CreateRequest;
 import org.ecommerce.repositories.OrderRepository;
 import org.ecommerce.services.impl.OrderServiceImpl;
 import org.ecommerce.util.JsonParser;
+import org.ecommerce.util.cache.FakeSelectCache;
 import org.ecommerce.util.database.DataSourceProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,7 +27,7 @@ public class Main {
     private static void placeOrders() {
         OrderController orderController = new OrderController(
                 new OrderServiceImpl(new OrderRepository()
-                        , new MessageQueue<>()));
+                        , new MessageQueue<>(), new FakeSelectCache<>()));
 
         String request = getRequest();
         orderController.consumeOrders();

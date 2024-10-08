@@ -7,6 +7,7 @@ import org.ecommerce.models.User;
 import org.ecommerce.repositories.*;
 import org.ecommerce.services.*;
 import org.ecommerce.services.impl.*;
+import org.ecommerce.util.cache.FakeSelectCache;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -31,8 +32,13 @@ public class ApplicationServicesConfig {
     }
 
     @Bean
-    OrderService orderService(OrderRepository orderRepository, MessageQueue<Order> messageQueue) {
-        return new OrderServiceImpl(orderRepository, messageQueue);
+    FakeSelectCache<Order> fakeSelectCache() {
+        return new FakeSelectCache<>();
+    }
+
+    @Bean
+    OrderService orderService(OrderRepository orderRepository, MessageQueue<Order> messageQueue, FakeSelectCache<Order> fakeSelectCache) {
+        return new OrderServiceImpl(orderRepository, messageQueue, fakeSelectCache);
     }
 
     @Bean

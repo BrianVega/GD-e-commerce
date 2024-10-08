@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.*;
 //@Import("some.other.config.bean.files")
 class OperationsTest {
     @TestConfiguration
-    @ComponentScan("org.ecommerce")
     static class operationsConfig {
         @Bean
         Operations<Customer> operations(HikariDataSource hikariDataSource) {
