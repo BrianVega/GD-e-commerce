@@ -56,13 +56,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order findById(Long id) {
-        if (fakeSelectCache.getDateTime() != null && LocalDateTime.now().compareTo(fakeSelectCache.getDateTime()) == 1) {
+        if (fakeSelectCache.getDateTime() != null
+                && LocalDateTime.now().compareTo(fakeSelectCache.getDateTime()) == 1) {
             return fakeSelectCache.getData();
         }
         return orderRepository.findById(id).stream()
                 .map((order) -> {
                     LocalDateTime currentDate = LocalDateTime.now();
-                    System.out.println(currentDate);
                     fakeSelectCache.setDateTime(currentDate);
                     fakeSelectCache.setData(order);
                     return order;
